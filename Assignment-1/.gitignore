@@ -1,3 +1,7 @@
+# User prefs
+.assignment_test.ts
+.assignment_test.js
+.assignment_test.js.map
 # Logs
 logs
 *.log
@@ -502,6 +506,7 @@ ASALocalRun/
 
 # Visual Studio History (VSHistory) files
 .vshistory/
+
 
 # BeatPulse healthcheck temp database
 healthchecksdb
