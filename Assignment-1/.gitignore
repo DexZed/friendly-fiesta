@@ -1,7 +1,7 @@
 # User prefs
-assignment_test.ts
-assignment_test.js
-assignment_test.js.map
+assignment_test.test.ts
+assignment_test.test.js
+assignment_test.test.js.map
 # Logs
 logs
 *.log
