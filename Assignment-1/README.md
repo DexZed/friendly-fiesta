@@ -41,7 +41,7 @@ type AdminUserType = User & Admin & { isAdmin: true };
 
 ##  🗝️ Understanding ```keyof``` in TypeScript
 
-#### The keyof keyword is TypeScript's way of saying: 
+#### The `keyof` keyword is TypeScript's way of saying: 
 ***"Give me the keys of this type as a union of string literals."***
 
 #### It’s a powerful tool for building generic utilities that work with object types in a type-safe way.
