@@ -1,99 +1,81 @@
-"use strict";
-//import test, { describe } from "node:test";
-//import { concatenateArrays } from "./app";
-//import { filterByRating } from "./app";
-// import { formatString } from "./app";
-// describe('formatString', () => {
-//     test('returns uppercase when toUpper is true', () => {
-//         expect(formatString('Hello', true)).toBe('HELLO');
-//     });
-//     test('returns lowercase when toUpper is false', () => {
-//         expect(formatString('Hello', false)).toBe('hello');
-//     });
-//     test('defaults to uppercase when toUpper is undefined', () => {
-//         expect(formatString('Hello')).toBe('HELLO');
-//     });
-//     test('handles empty string', () => {
-//         expect(formatString('', false)).toBe('');
-//     });
-// });
-//describe('filterByRating', () => {
-//    it('should return items with rating >= 4', () => {
-//        const books = [
-//            { title: "Book A", rating: 4.5 },
-//            { title: "Book B", rating: 3.2 },
-//            { title: "Book C", rating: 5.0 }
-//        ];
-//        const result = filterByRating(books);
-//        expect(result).toEqual([
-//            { title: "Book A", rating: 4.5 },
-//            { title: "Book C", rating: 5.0 }
-//        ]);
-//    });
-//    it('should return an empty array if all ratings are below 4', () => {
-//        const items = [
-//            { title: "Low A", rating: 1 },
-//            { title: "Low B", rating: 3.9 }
-//        ];
-//        expect(filterByRating(items)).toEqual([]);
-//    });
-//    it('should include items with rating exactly 4', () => {
-//        const items = [
-//            { title: "Exact", rating: 4.0 },
-//            { title: "Below", rating: 3.99 }
-//        ];
-//        expect(filterByRating(items)).toEqual([{ title: "Exact", rating: 4.0 }]);
-//    });
-//    it('should handle an empty input array', () => {
-//        expect(filterByRating([])).toEqual([]);
-//    });
-//    it('should not modify the original array', () => {
-//        const original = [
-//            { title: "Book X", rating: 4.2 },
-//            { title: "Book Y", rating: 2.5 }
-//        ];
-//        const copy = [...original];
-//        filterByRating(original);
-//        expect(original).toEqual(copy);
-//    });
-//});
-//describe('concatenateArrays', () => {
-//    it('should concatenate string arrays', () => {
-//        expect(concatenateArrays(["a", "b"], ["c"])).toEqual(["a", "b", "c"]);
-//    });
-//    it('should concatenate number arrays', () => {
-//        expect(concatenateArrays([1, 2], [3, 4], [5])).toEqual([1, 2, 3, 4, 5]);
-//    });
-//    it('should return an empty array when given no arrays', () => {
-//        expect(concatenateArrays()).toEqual([]);
-//    });
-//    it('should handle a mix of empty and non-empty arrays', () => {
-//        expect(concatenateArrays([], [1, 2], [], [3])).toEqual([1, 2, 3]);
-//    });
-//    it('should work with custom object arrays', () => {
-//        const obj1 = { id: 1 }, obj2 = { id: 2 };
-//        expect(concatenateArrays([obj1], [obj2])).toEqual([obj1, obj2]);
-//    });
-//});
-//describe('Vehicle class', () => {
-//    it('should return correct info from getInfo()', () => {
-//        const vehicle = new Vehicle("Honda", 2015);
-//        expect(vehicle.getInfo()).toBe(`"Make: Honda, Year: 2015"`);
-//    });
-//});
-//describe('Car class', () => {
-//    it('should return correct info from getInfo() (inherited)', () => {
-//        const car = new Car("Toyota", 2020, "Corolla");
-//        expect(car.getInfo()).toBe(`"Make: Toyota, Year: 2020"`);
-//    });
-//    it('should return correct model from getModel()', () => {
-//        const car = new Car("Toyota", 2020, "Corolla");
-//        expect(car.getModel()).toBe(`"Model: Corolla"`);
-//    });
-//    it('should work with different car data', () => {
-//        const car = new Car("Ford", 2022, "Mustang");
-//        expect(car.getInfo()).toBe(`"Make: Ford, Year: 2022"`);
-//        expect(car.getModel()).toBe(`"Model: Mustang"`);
-//    });
-//});
+import { formatString, filterByRating, concatenateArrays, processValue, getMostExpensiveProduct, getDayType, squareAsync, Car, Day } from "./app";
+import { describe, expect, test } from '@jest/globals';
+describe('formatString', () => {
+    test('returns uppercase by default', () => {
+        expect(formatString('hello')).toBe('HELLO');
+    });
+    test('returns uppercase if true passed', () => {
+        expect(formatString('world', true)).toBe('WORLD');
+    });
+    test('returns lowercase if false passed', () => {
+        expect(formatString('HeLLo', false)).toBe('hello');
+    });
+});
+describe('filterByRating', () => {
+    const items = [
+        { title: 'A', rating: 4 },
+        { title: 'B', rating: 3.5 },
+        { title: 'C', rating: 5 },
+    ];
+    test('filters items with rating >= 4', () => {
+        expect(filterByRating(items)).toEqual([
+            { title: 'A', rating: 4 },
+            { title: 'C', rating: 5 },
+        ]);
+    });
+});
+describe('concatenateArrays', () => {
+    test('concats arrays of strings', () => {
+        expect(concatenateArrays(['a'], ['b', 'c'])).toEqual(['a', 'b', 'c']);
+    });
+    test('concats arrays of numbers', () => {
+        expect(concatenateArrays([1], [2, 3], [4])).toEqual([1, 2, 3, 4]);
+    });
+});
+describe('Car class', () => {
+    const car = new Car('Toyota', 2020, 'Corolla');
+    test('returns correct info from getInfo()', () => {
+        expect(car.getInfo()).toBe('"Make: Toyota, Year: 2020"');
+    });
+    test('returns correct model from getModel()', () => {
+        expect(car.getModel()).toBe('"Model: Corolla"');
+    });
+});
+describe('processValue', () => {
+    test('returns length if input is string', () => {
+        expect(processValue('hello')).toBe(5);
+    });
+    test('returns double if input is number', () => {
+        expect(processValue(7)).toBe(14);
+    });
+});
+describe('getMostExpensiveProduct', () => {
+    const products = [
+        { name: 'Pen', price: 10 },
+        { name: 'Notebook', price: 25 },
+        { name: 'Bag', price: 50 },
+    ];
+    test('returns the most expensive product', () => {
+        expect(getMostExpensiveProduct(products)).toEqual({ name: 'Bag', price: 50 });
+    });
+    test('returns null for empty array', () => {
+        expect(getMostExpensiveProduct([])).toBeNull();
+    });
+});
+describe('getDayType', () => {
+    test('returns Weekday for Monday', () => {
+        expect(getDayType(Day.Monday)).toBe('Weekday');
+    });
+    test('returns Weekend for Sunday', () => {
+        expect(getDayType(Day.Sunday)).toBe('Weekend');
+    });
+});
+describe('squareAsync', () => {
+    test('returns the square after 1s for positive number', async () => {
+        await expect(squareAsync(3)).resolves.toBe(9);
+    });
+    test('throws error for negative number', async () => {
+        await expect(squareAsync(-1)).rejects.toThrow('Negative number not allowed');
+    });
+});
 //# sourceMappingURL=assignment_test.test.js.map

@@ -3,16 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-    "scripts": {
-        "test": "jest",
-        "build": "tsc --build",
-        "clean": "tsc --build --clean"
-    },
+  "scripts": {
+    "test": "jest",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.14",
     "eslint": "^9.26.0",

@@ -12,6 +12,7 @@
     <PackageJsonAuthor Condition="$(PackageJsonAuthor) == ''"></PackageJsonAuthor>
     <PackageJsonLicense Condition="$(PackageJsonLicense) == ''">ISC</PackageJsonLicense>
     <PackageJsonType Condition="$(PackageJsonType) == ''">module</PackageJsonType>
+    <PackageJsonDevdependenciesJestGlobals Condition="$(PackageJsonDevdependenciesJestGlobals) == ''">^29.7.0</PackageJsonDevdependenciesJestGlobals>
     <PackageJsonDevdependenciesTypesJest Condition="$(PackageJsonDevdependenciesTypesJest) == ''">^29.5.14</PackageJsonDevdependenciesTypesJest>
     <PackageJsonDevdependenciesTypesNode Condition="$(PackageJsonDevdependenciesTypesNode) == ''">^22.15.14</PackageJsonDevdependenciesTypesNode>
     <PackageJsonDevdependenciesEslint Condition="$(PackageJsonDevdependenciesEslint) == ''">^9.26.0</PackageJsonDevdependenciesEslint>

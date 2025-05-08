@@ -1,23 +1,23 @@
-export function formatString(input: string, toUpper?: boolean): string {
+ function formatString(input: string, toUpper?: boolean): string {
      var result = input;
 
      return (toUpper || toUpper === undefined) ? input.toUpperCase() : input.toLowerCase();
 
  }
 
- export function filterByRating(
+  function filterByRating(
   items: { title: string; rating: number }[]
 ): { title: string; rating: number }[] {
   return items.filter((item) => item.rating >= 4);
 }
 
 
-  export function concatenateArrays<T>(...arrays: T[][]): T[] {
+   function concatenateArrays<T>(...arrays: T[][]): T[] {
     return Array.prototype.concat(...arrays);
 }
 
 
-export class Vehicle {
+ class Vehicle {
     private make: string;
     private year: number;
     public constructor(make: string, year: number) {
@@ -28,7 +28,7 @@ export class Vehicle {
         return `"Make: ${this.make}, Year: ${this.year}"`;
     }
 }
-export class Car extends Vehicle {
+ class Car extends Vehicle {
     private model: string
     public constructor(make: string, year: number, model: string) {
 
@@ -38,17 +38,17 @@ export class Car extends Vehicle {
     public getModel() { return `"Model: ${this.model}"` }
 }
 
-export function processValue(value: string | number): number {
+ function processValue(value: string | number): number {
     return typeof value === "string" ? value.length : value * 2;
 }
 
 
-export interface Product {
+ interface Product {
     name: string;
     price: number;
 }
 
-export function getMostExpensiveProduct(products: Product[]): Product | null {
+ function getMostExpensiveProduct(products: Product[]): Product | null {
     if (products.length === 0) return null;
 
     return products.reduce((max, product) =>
@@ -56,7 +56,7 @@ export function getMostExpensiveProduct(products: Product[]): Product | null {
     );
 }
 
-export enum Day {
+ enum Day {
     Monday,
     Tuesday,
     Wednesday,
@@ -66,11 +66,11 @@ export enum Day {
     Sunday
 }
 
-export function getDayType(day: Day): string {
+ function getDayType(day: Day): string {
     return day === Day.Saturday || day === Day.Sunday ? "Weekend" : "Weekday";
 }
 
-export async  function squareAsync(n: number): Promise<number> {
+ async  function squareAsync(n: number): Promise<number> {
     if (n < 0) {
         throw new Error("Negative number not allowed");
     }
