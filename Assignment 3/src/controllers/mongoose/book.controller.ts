@@ -51,6 +51,17 @@ controller.get("/borrow", async (_req: Request, res: Response) => {
   try {
     const summary = await BorrowModel.aggregate([
       {
+        $addFields: {
+          book_id_object: {
+            $cond: {
+              if: { $eq: [{ $type: "$book" }, "string"] },
+              then: { $toObjectId: "$book" },
+              else: "$book"
+            }
+          }
+        }
+      },
+      {
         $group: {
           _id: "$book",
           totalQuantity: { $sum: "$quantity" },

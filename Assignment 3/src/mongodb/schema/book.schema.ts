@@ -30,7 +30,7 @@ const borrowSchema = new Schema<Borrow>({
   book: { type: Schema.Types.ObjectId, ref: 'books', required: true },
   quantity: { type: Number, required: true, min: 1 },
   dueDate: { type: Date, required: true }
-});
+},{ timestamps: true });
 
 export const BorrowModel = model<Borrow>('borrow', borrowSchema);
 export const BooksModel = model<Books>('books', bookSchema);
