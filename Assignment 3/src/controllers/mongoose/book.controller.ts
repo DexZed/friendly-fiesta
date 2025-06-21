@@ -2,6 +2,84 @@ import { Router, Request, Response } from "express";
 import { BooksModel, BorrowModel } from "../../mongodb/schema/book.schema";
 
 const controller = Router();
+// 6. Borrow a Book
+controller.post("/borrow", async (req: Request, res: Response) => {
+  try {
+    const { book: bookId, quantity, dueDate } = req.body;
+    const book = await BooksModel.findById(bookId);
+    if (!book) throw new Error("Book not found");
+    if (book.copies < quantity) throw new Error("Not enough copies available");
+
+    book.copies -= quantity;
+    book.updateAvailability();
+    await book.save();
+    
+    const borrow = await BorrowModel.create({
+      book: bookId,
+      quantity,
+      dueDate,
+    });
+    res.status(201).json({
+      success: true,
+      message: "Book borrowed successfully",
+      data: borrow,
+    });
+  } catch (error:any) {
+    console.error('Borrow Error:', error);
+    res
+      .status(400)
+      .json({ success: false, message: "Borrowing failed",  error: error?.errors || error?.message || error });
+  }
+});
+
+// 7. Borrow Summary (Aggregation)
+controller.get("/borrow", async (_req: Request, res: Response) => {
+  try {
+    const summary = await BorrowModel.aggregate([
+      {
+        $group: {
+          _id: "$book",
+          totalQuantity: { $sum: "$quantity" },
+        },
+      },
+      {
+        $lookup: {
+          from: "books",
+          localField: "_id",
+          foreignField: "_id",
+          as: "bookDetails",
+        },
+      },
+      { $unwind: "$bookDetails" },
+      {
+        $project: {
+          book: {
+            title: "$bookDetails.title",
+            isbn: "$bookDetails.isbn",
+          },
+          totalQuantity: 1,
+        },
+      },
+    ]);
+
+    res.json({
+      success: true,
+      message: "Borrowed books summary retrieved successfully",
+      data: summary,
+    });
+  } catch (error) {
+     
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Failed to retrieve borrow summary",
+        error,
+      });
+  }
+});
+
+// 1. Create Book
 controller.post("/", async (req: Request, res: Response) => {
   try {
     const book = await BooksModel.create(req.body);
@@ -25,7 +103,7 @@ controller.get("/", async (req: Request, res: Response) => {
       filter,
       sortBy = "createdAt",
       sort = "desc",
-      limit = "10",
+      limit = "5",
     } = req.query;
     const query: any = {};
     if (filter) query.genre = filter;
@@ -98,79 +176,11 @@ controller.delete("/:bookId", async (req: Request, res: Response) => {
   }
 });
 
-// 6. Borrow a Book
-controller.post("/borrow", async (req: Request, res: Response) => {
-  try {
-    const { book: bookId, quantity, dueDate } = req.body;
-    const book = await BooksModel.findById(bookId);
-    if (!book) throw new Error("Book not found");
-    if (book.copies < quantity) throw new Error("Not enough copies available");
 
-    book.copies -= quantity;
-    book.updateAvailability();
-    await book.save();
-    
-    const borrow = await BorrowModel.create({
-      book: bookId,
-      quantity,
-      dueDate,
-    });
-    res.status(201).json({
-      success: true,
-      message: "Book borrowed successfully",
-      data: borrow,
-    });
-  } catch (error) {
-    res
-      .status(400)
-      .json({ success: false, message: "Borrowing failed", error });
-  }
-});
 
-// 7. Borrow Summary (Aggregation)
-controller.get("/borrow", async (_req: Request, res: Response) => {
-  try {
-    const summary = await BorrowModel.aggregate([
-      {
-        $group: {
-          _id: "$book",
-          totalQuantity: { $sum: "$quantity" },
-        },
-      },
-      {
-        $lookup: {
-          from: "books",
-          localField: "_id",
-          foreignField: "_id",
-          as: "bookDetails",
-        },
-      },
-      { $unwind: "$bookDetails" },
-      {
-        $project: {
-          book: {
-            title: "$bookDetails.title",
-            isbn: "$bookDetails.isbn",
-          },
-          totalQuantity: 1,
-        },
-      },
-    ]);
-
-    res.json({
-      success: true,
-      message: "Borrowed books summary retrieved successfully",
-      data: summary,
-    });
-  } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to retrieve borrow summary",
-        error,
-      });
-  }
+controller.use((req, _res, next) => {
+  console.log("Incoming route:", req.originalUrl);
+  next();
 });
 
 export default controller;
