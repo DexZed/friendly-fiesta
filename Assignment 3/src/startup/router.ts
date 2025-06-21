@@ -6,6 +6,6 @@ const routerSetup = (app: Express) =>
   .get('/', async (req: Request, res: Response) => {
     res.send('Hello Express APIvantage!');
   })
-  .use('/api/books',booksRouter);
+  .use('/api',booksRouter);
 
 export default routerSetup;

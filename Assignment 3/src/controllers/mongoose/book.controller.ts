@@ -4,7 +4,7 @@ import { BooksModel, BorrowModel } from "../../mongodb/schema/book.schema";
 const controller = Router();
 
 // 1. Create Book
-controller.post("/", async (req: Request, res: Response) => {
+controller.post("/books", async (req: Request, res: Response) => {
   try {
     const book = await BooksModel.create(req.body);
     res.status(201).json({
@@ -21,7 +21,7 @@ controller.post("/", async (req: Request, res: Response) => {
   }
 });
 // 2. Get All Books
-controller.get("/", async (req: Request, res: Response) => {
+controller.get("/books", async (req: Request, res: Response) => {
   try {
     const {
       filter,
@@ -104,7 +104,7 @@ controller.get("/borrow", async (_req: Request, res: Response) => {
   }
 });
 // 3. Get Book by ID
-controller.get("/:bookId", async (req: Request, res: Response) => {
+controller.get("/books/:bookId", async (req: Request, res: Response) => {
   try {
     const book = await BooksModel.findById(req.params.bookId);
     if (!book) throw new Error("Book not found");
@@ -119,7 +119,7 @@ controller.get("/:bookId", async (req: Request, res: Response) => {
 });
 
 // 4. Update Book
-controller.put("/:bookId", async (req: Request, res: Response) => {
+controller.put("/books/:bookId", async (req: Request, res: Response) => {
   try {
     const book = await BooksModel.findByIdAndUpdate(
       req.params.bookId,
@@ -143,7 +143,7 @@ controller.put("/:bookId", async (req: Request, res: Response) => {
 });
 
 // 5. Delete Book
-controller.delete("/:bookId", async (req: Request, res: Response) => {
+controller.delete("/books/:bookId", async (req: Request, res: Response) => {
   try {
     await BooksModel.findByIdAndDelete(req.params.bookId);
     res.json({
