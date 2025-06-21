@@ -2,6 +2,7 @@ import { Express } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import chalk from 'chalk';
+import errorHandler from '../middleware/errorHandler';
 const securitySetup = (app: Express, express:any) =>
   app
   .use(cors())
@@ -26,6 +27,6 @@ const securitySetup = (app: Express, express:any) =>
           chalk.magenta(tokens['response-time'](req, res) + ' ms'),
         ].join(' ');
       })
-    );
+    ).use(errorHandler);
 
 export default securitySetup;

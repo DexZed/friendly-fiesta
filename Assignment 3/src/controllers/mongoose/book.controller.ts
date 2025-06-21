@@ -2,36 +2,50 @@ import { Router, Request, Response } from "express";
 import { BooksModel, BorrowModel } from "../../mongodb/schema/book.schema";
 
 const controller = Router();
-// 6. Borrow a Book
-controller.post("/borrow", async (req: Request, res: Response) => {
-  try {
-    const { book: bookId, quantity, dueDate } = req.body;
-    const book = await BooksModel.findById(bookId);
-    if (!book) throw new Error("Book not found");
-    if (book.copies < quantity) throw new Error("Not enough copies available");
 
-    book.copies -= quantity;
-    book.updateAvailability();
-    await book.save();
-    
-    const borrow = await BorrowModel.create({
-      book: bookId,
-      quantity,
-      dueDate,
-    });
+// 1. Create Book
+controller.post("/", async (req: Request, res: Response) => {
+  try {
+    const book = await BooksModel.create(req.body);
     res.status(201).json({
       success: true,
-      message: "Book borrowed successfully",
-      data: borrow,
+      message: "Book created successfully",
+      data: book,
     });
-  } catch (error:any) {
-    console.error('Borrow Error:', error);
-    res
-      .status(400)
-      .json({ success: false, message: "Borrowing failed",  error: error?.errors || error?.message || error });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "Validation failed",
+      error: error,
+    });
   }
 });
+// 2. Get All Books
+controller.get("/", async (req: Request, res: Response) => {
+  try {
+    const {
+      filter,
+      sortBy = "createdAt",
+      sort = "desc",
+      limit = "5",
+    } = req.query;
+    const query: any = {};
+    if (filter) query.genre = filter;
+    const books = await BooksModel.find(query)
+      .sort({ [sortBy.toString()]: sort === "asc" ? 1 : -1 })
+      .limit(Number(limit));
 
+    res.json({
+      success: true,
+      message: "Books retrieved successfully",
+      data: books,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Error retrieving books", error });
+  }
+});
 // 7. Borrow Summary (Aggregation)
 controller.get("/borrow", async (_req: Request, res: Response) => {
   try {
@@ -78,51 +92,6 @@ controller.get("/borrow", async (_req: Request, res: Response) => {
       });
   }
 });
-
-// 1. Create Book
-controller.post("/", async (req: Request, res: Response) => {
-  try {
-    const book = await BooksModel.create(req.body);
-    res.status(201).json({
-      success: true,
-      message: "Book created successfully",
-      data: book,
-    });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: "Validation failed",
-      error: error,
-    });
-  }
-});
-// 2. Get All Books
-controller.get("/", async (req: Request, res: Response) => {
-  try {
-    const {
-      filter,
-      sortBy = "createdAt",
-      sort = "desc",
-      limit = "5",
-    } = req.query;
-    const query: any = {};
-    if (filter) query.genre = filter;
-    const books = await BooksModel.find(query)
-      .sort({ [sortBy.toString()]: sort === "asc" ? 1 : -1 })
-      .limit(Number(limit));
-
-    res.json({
-      success: true,
-      message: "Books retrieved successfully",
-      data: books,
-    });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ success: false, message: "Error retrieving books", error });
-  }
-});
-
 // 3. Get Book by ID
 controller.get("/:bookId", async (req: Request, res: Response) => {
   try {
@@ -176,6 +145,37 @@ controller.delete("/:bookId", async (req: Request, res: Response) => {
   }
 });
 
+
+// 6. Borrow a Book
+
+controller.post("/borrow", async (req: Request, res: Response) => {
+  try {
+    const { book: bookId, quantity, dueDate } = req.body;
+    const book = await BooksModel.findById(bookId);
+    if (!book) throw new Error("Book not found");
+    if (book.copies < quantity) throw new Error("Not enough copies available");
+
+    book.copies -= quantity;
+    book.updateAvailability();
+    await book.save();
+    
+    const borrow = await BorrowModel.create({
+      book: bookId,
+      quantity,
+      dueDate,
+    });
+    res.status(201).json({
+      success: true,
+      message: "Book borrowed successfully",
+      data: borrow,
+    });
+  } catch (error:any) {
+    console.error('Borrow Error:', error);
+    res
+      .status(400)
+      .json({ success: false, message: "Borrowing failed",  error: error?.errors || error?.message || error });
+  }
+});
 
 
 controller.use((req, _res, next) => {
