@@ -9,7 +9,8 @@ An Express + TypeScript REST API for managing a library system with book borrowi
 ### 1. Clone the repository
 
 ```bash
-git clone [Static Badge](https://img.shields.io/badge/Repo-link-brightgreen?link=https%3A%2F%2Fgithub.com%2FDexZed%2Ffriendly-fiesta%2Ftree%2Fmain%2FAssignment%25203)
+git clone [![Assignment 3](https://img.shields.io/badge/GitHub-Assignment%203-blue?logo=github)](https://github.com/DexZed/friendly-fiesta/tree/main/Assignment%203)
+
 
 cd Assignment 3
 ```
