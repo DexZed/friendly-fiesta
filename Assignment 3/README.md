@@ -9,7 +9,7 @@ An Express + TypeScript REST API for managing a library system with book borrowi
 ### 1. Clone the repository
 
 ```bash
-git clone https://your-repo-url.git
+git clone [https://your-repo-url.git](https://github.com/DexZed/friendly-fiesta/tree/main/Assignment%203)
 cd your-repo-folder
 ```
 
