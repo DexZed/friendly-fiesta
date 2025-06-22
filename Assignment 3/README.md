@@ -9,8 +9,8 @@ An Express + TypeScript REST API for managing a library system with book borrowi
 ### 1. Clone the repository
 
 ```bash
-git clone [[https://your-repo-url.git](https://github.com/DexZed/friendly-fiesta/tree/main/Assignment%203)]
-cd your-repo-folder
+git clone [![github](https://github.com/DexZed/friendly-fiesta/tree/main/Assignment%203)
+cd Assignment 3
 ```
 
 ### 2. Install dependencies
@@ -25,7 +25,6 @@ Create a `.env` file in the root directory:
 
 ```env
 MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/library?retryWrites=true&w=majority
-PORT=3000
 ```
 
 ### 4. Start the server
