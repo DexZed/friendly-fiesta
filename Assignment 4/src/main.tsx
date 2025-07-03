@@ -5,15 +5,16 @@ import App from "./App.tsx";
 import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { store } from "./app/store.ts";
+import ListView from "./ui/listView.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <App></App>,
     children: [
       {
-        path: "",
-        element: <div></div>,
+        index:true,
+        element: <><ListView></ListView></>,
       },
     ],
   },

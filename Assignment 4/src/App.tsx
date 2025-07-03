@@ -1,7 +1,8 @@
+import { Outlet } from "react-router";
 import "./App.css";
 import AppContainer from "./ui/AppBody";
 import Footer from "./ui/footer";
-import ListView from "./ui/listView";
+
 import Nav from "./ui/nav";
 
 function App() {
@@ -9,7 +10,7 @@ function App() {
     <>
       <AppContainer>
         <Nav></Nav>
-        <ListView></ListView>
+        <Outlet></Outlet>
         <Footer></Footer>
       </AppContainer>
     </>
