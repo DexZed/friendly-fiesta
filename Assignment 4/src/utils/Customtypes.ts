@@ -1,4 +1,4 @@
-export interface Books {
+export interface Book {
   _id: string;
   title: string;
   author: string;
@@ -20,5 +20,5 @@ export interface Borrow  {
 export interface ApiBooksResponse {
   success: boolean;
   message: string;
-  data: Books[];
+  data: Book[];
 }
