@@ -1,12 +1,12 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { ApiBooksResponse, Book } from "../utils/Customtypes";
+import type { ApiBooksResponse, ApiBorrowSummaryResponse, Book, BorrowResponse, BorrowSummaryItem } from "../utils/Customtypes";
 
 // Define a service using a base URL and expected endpoints
 export const bookApi = createApi({
   reducerPath: "bookApi",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/api" }),
-  tagTypes: ["Books"],
+  tagTypes: ["Books", "Borrow"],
   endpoints: (builder) => ({
     getBooks: builder.query<ApiBooksResponse, undefined>({
       query: () => "books",
@@ -21,6 +21,18 @@ export const bookApi = createApi({
           body: book,
         };
       },
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(
+            bookApi.util.updateQueryData("getBooks", undefined, (draft) => {
+              draft.data.push(...data.data);
+            })
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      },
       invalidatesTags: ["Books"],
     }),
     updateBook: builder.mutation<Book, Book>({
@@ -31,6 +43,21 @@ export const bookApi = createApi({
           body: book,
         };
       },
+      async onQueryStarted(book, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          bookApi.util.updateQueryData("getBooks", undefined, (draft) => {
+            const index = draft.data.findIndex((b: Book) => b._id === book._id);
+            if (index !== -1) {
+              draft.data[index] = book;
+            }
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
       invalidatesTags: ["Books"],
     }),
     deleteBook: builder.mutation<{ success: boolean; id: string }, string>({
@@ -40,11 +67,59 @@ export const bookApi = createApi({
           method: "DELETE",
         };
       },
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          bookApi.util.updateQueryData("getBooks", undefined, (draft) => {
+            const index = draft.data.findIndex((b: Book) => b._id === id);
+            if (index !== -1) {
+              draft.data.splice(index, 1);
+            }
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
       invalidatesTags: ["Books"],
+    }),
+    getBorrowSummery: builder.query<ApiBorrowSummaryResponse, undefined>({
+      query: () => "borrow",
+      providesTags: ["Borrow"],
+    }),
+    borrowBook: builder.mutation<BorrowResponse, Partial<BorrowSummaryItem>>({
+      query: (borrow) => {
+        return {
+          url: "/borrow",
+          method: "POST",
+          body: borrow,
+        };
+      },
+      async onQueryStarted(borrow, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          bookApi.util.updateQueryData("getBorrowSummery", undefined, (draft) =>
+          {
+            draft.data.push(borrow as BorrowSummaryItem);
+          }
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+      invalidatesTags: ["Borrow"],
     }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetBooksQuery, useCreateBookMutation, useUpdateBookMutation, useDeleteBookMutation } = bookApi;
+export const {
+  useGetBooksQuery,
+  useCreateBookMutation,
+  useUpdateBookMutation,
+  useDeleteBookMutation,
+} = bookApi;

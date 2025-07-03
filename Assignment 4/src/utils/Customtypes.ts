@@ -22,3 +22,29 @@ export interface ApiBooksResponse {
   message: string;
   data: Book[];
 }
+
+export interface BorrowResponse {
+  success: boolean;
+  message: string;
+  data: {
+    _id: string;
+    book: string;
+    quantity: number;
+    dueDate: string;
+  };
+}
+
+export interface BorrowSummaryItem {
+  _id: string; 
+  totalQuantity: number;
+  book: {
+    title: string;
+    isbn: string;
+  };
+}
+
+export interface ApiBorrowSummaryResponse {
+  success: boolean;
+  message: string;
+  data: BorrowSummaryItem[];
+}
