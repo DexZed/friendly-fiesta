@@ -1,5 +1,5 @@
 import { useGetBooksQuery } from "../services/books";
-import type { Books } from "../utils/Customtypes";
+import type { Book } from "../utils/Customtypes";
 import ActionButtons from "./ActionButtons";
 
 type Props = {};
@@ -31,7 +31,7 @@ function ListView({}: Props) {
                 </tr>
               </thead>
               <tbody>
-                {books.map((book: Books, idx) => {
+                {books.map((book: Book, idx) => {
                   return (
                     <tr key={book._id}>
                       <th>{idx}</th>

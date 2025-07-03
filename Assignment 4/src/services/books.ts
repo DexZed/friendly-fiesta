@@ -23,11 +23,28 @@ export const bookApi = createApi({
       },
       invalidatesTags: ["Books"],
     }),
-    
+    updateBook: builder.mutation<Book, Book>({
+      query: (book) => {
+        return {
+          url: `/books/${book._id}`,
+          method: "PUT",
+          body: book,
+        };
+      },
+      invalidatesTags: ["Books"],
+    }),
+    deleteBook: builder.mutation<{ success: boolean; id: string }, string>({
+      query: (id) => {
+        return {
+          url: `/books/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["Books"],
+    }),
   }),
-
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetBooksQuery } = bookApi;
+export const { useGetBooksQuery, useCreateBookMutation, useUpdateBookMutation, useDeleteBookMutation } = bookApi;
