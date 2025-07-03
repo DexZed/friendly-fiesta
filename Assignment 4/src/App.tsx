@@ -1,4 +1,5 @@
 import "./App.css";
+import AppContainer from "./ui/AppBody";
 import Footer from "./ui/footer";
 import ListView from "./ui/listView";
 import Nav from "./ui/nav";
@@ -6,11 +7,11 @@ import Nav from "./ui/nav";
 function App() {
   return (
     <>
-      
-     <Nav></Nav>
-    <ListView></ListView>
-     <Footer></Footer>
-      
+      <AppContainer>
+        <Nav></Nav>
+        <ListView></ListView>
+        <Footer></Footer>
+      </AppContainer>
     </>
   );
 }
