@@ -1,4 +1,4 @@
-import { useGetBooksQuery } from "../services/books";
+import { useDeleteBookMutation, useGetBooksQuery } from "../services/books";
 import type { Book } from "../utils/Customtypes";
 import ActionButtons from "./ActionButtons";
 
@@ -6,8 +6,19 @@ type Props = {};
 
 function ListView({}: Props) {
   const { data, error, isLoading } = useGetBooksQuery(undefined);
+  const [deleteBook] = useDeleteBookMutation();
   const books = data?.data || [];
-  console.log("data: ", books);
+  console.log(books);
+ async function actionDelete(id: string) {
+    try {
+      await deleteBook(id).unwrap();
+      //TODO: sweet alert toast confirmation
+      window.location.reload();
+    } catch (error) {
+      console.error("Delete failed:",error);
+      //TODO: sweet alert toast confirmation
+    }
+  }
   return (
     <div>
       {error ? (
@@ -63,6 +74,7 @@ function ListView({}: Props) {
                         <ActionButtons
                           name="Delete"
                           color="btn-accent"
+                          action={()=>actionDelete(book._id)}
                         />
                         
                       </td>
