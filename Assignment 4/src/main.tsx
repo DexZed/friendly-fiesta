@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { store } from "./app/store.ts";
 import ListView from "./ui/listView.tsx";
+import CreateForm from "./ui/CreateForm.tsx";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         index:true,
         element: <><ListView></ListView></>,
+      },
+      {
+        path:"/create-book",
+        element:<><CreateForm/></>
       },
     ],
   },

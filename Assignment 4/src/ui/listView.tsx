@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { useDeleteBookMutation, useGetBooksQuery } from "../services/books";
 import type { Book } from "../utils/Customtypes";
 import ActionButtons from "./ActionButtons";
@@ -20,6 +21,8 @@ function ListView({}: Props) {
     }
   }
   return (
+    <>
+    <div className="flex justify-end m-5"><Link className="btn btn-secondary btn-outline rounded-full" to="/create-book">Create Book</Link></div>
     <div>
       {error ? (
         <>Oh no, there was an error</>
@@ -87,7 +90,7 @@ function ListView({}: Props) {
           </div>
         </>
       ) : null}
-    </div>
+    </div></>
   );
 }
 
