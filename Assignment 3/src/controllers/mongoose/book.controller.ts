@@ -28,7 +28,7 @@ controller.get("/books", async (req: Request, res: Response) => {
       filter,
       sortBy = "createdAt",
       sort = "desc",
-      limit = "5",
+      limit = "0",
     } = req.query;
     const query: any = {};
     if (filter) query.genre = filter;
