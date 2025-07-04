@@ -1,6 +1,12 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { ApiBooksResponse, ApiBorrowSummaryResponse, Book, BorrowResponse, BorrowSummaryItem } from "../utils/Customtypes";
+import type {
+  ApiBooksResponse,
+  ApiBorrowSummaryResponse,
+  Book,
+  Borrow,
+  BorrowResponse,
+} from "../utils/Customtypes";
 
 // Define a service using a base URL and expected endpoints
 export const bookApi = createApi({
@@ -84,11 +90,7 @@ export const bookApi = createApi({
       },
       invalidatesTags: ["Books"],
     }),
-    getBorrowSummery: builder.query<ApiBorrowSummaryResponse, undefined>({
-      query: () => "borrow",
-      providesTags: ["Borrow"],
-    }),
-    borrowBook: builder.mutation<BorrowResponse, Partial<BorrowSummaryItem>>({
+    createBorrow: builder.mutation<BorrowResponse, Borrow>({
       query: (borrow) => {
         return {
           url: "/borrow",
@@ -96,21 +98,11 @@ export const bookApi = createApi({
           body: borrow,
         };
       },
-      async onQueryStarted(borrow, { dispatch, queryFulfilled }) {
-        const patchResult = dispatch(
-          bookApi.util.updateQueryData("getBorrowSummery", undefined, (draft) =>
-          {
-            draft.data.push(borrow as BorrowSummaryItem);
-          }
-          )
-        );
-        try {
-          await queryFulfilled;
-        } catch {
-          patchResult.undo();
-        }
-      },
       invalidatesTags: ["Borrow"],
+    }),
+    getBorrowSummary: builder.query<ApiBorrowSummaryResponse, undefined>({
+      query: () => "borrow",
+      providesTags: ["Borrow"],
     }),
   }),
 });
