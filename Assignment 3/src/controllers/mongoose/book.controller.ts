@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { BooksModel, BorrowModel } from "../../mongodb/schema/book.schema";
-
+console.log("Borrow controller file was loaded at:", new Date().toLocaleTimeString());
 const controller = Router();
 
 // 1. Create Book
@@ -13,6 +13,7 @@ controller.post("/books", async (req: Request, res: Response) => {
       data: book,
     });
   } catch (error) {
+    
     res.status(400).json({
       success: false,
       message: "Validation failed",
@@ -56,15 +57,17 @@ controller.get("/borrow", async (_req: Request, res: Response) => {
             $cond: {
               if: { $eq: [{ $type: "$book" }, "string"] },
               then: { $toObjectId: "$book" },
-              else: "$book"
-            }
-          }
-        }
+              else: "$book",
+            },
+          },
+        },
       },
       {
         $group: {
-          _id: "$book",
+          _id: "$book_id_object",
           totalQuantity: { $sum: "$quantity" },
+          createdAt: { $min: "$createdAt" },
+          updatedAt: { $max: "$updatedAt" },
         },
       },
       {
@@ -83,24 +86,24 @@ controller.get("/borrow", async (_req: Request, res: Response) => {
             isbn: "$bookDetails.isbn",
           },
           totalQuantity: 1,
+          createdAt: 1,
+          updatedAt: 1,
         },
       },
     ]);
-
+    
     res.json({
       success: true,
       message: "Borrowed books summary retrieved successfully",
       data: summary,
     });
   } catch (error) {
-     
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to retrieve borrow summary",
-        error,
-      });
+     console.error("AGGREGATION FAILED:", error); 
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve borrow summary",
+      error,
+    });
   }
 });
 // 3. Get Book by ID
@@ -136,6 +139,7 @@ controller.put("/books/:bookId", async (req: Request, res: Response) => {
       data: book,
     });
   } catch (error) {
+    
     res
       .status(400)
       .json({ success: false, message: "Validation failed", error });
@@ -156,7 +160,6 @@ controller.delete("/books/:bookId", async (req: Request, res: Response) => {
   }
 });
 
-
 // 6. Borrow a Book
 
 controller.post("/borrow", async (req: Request, res: Response) => {
@@ -169,7 +172,7 @@ controller.post("/borrow", async (req: Request, res: Response) => {
     book.copies -= quantity;
     book.updateAvailability();
     await book.save();
-    
+
     const borrow = await BorrowModel.create({
       book: bookId,
       quantity,
@@ -180,14 +183,15 @@ controller.post("/borrow", async (req: Request, res: Response) => {
       message: "Book borrowed successfully",
       data: borrow,
     });
-  } catch (error:any) {
-    console.error('Borrow Error:', error);
-    res
-      .status(400)
-      .json({ success: false, message: "Borrowing failed",  error: error?.errors || error?.message || error });
+  } catch (error: any) {
+    console.error("Borrow Error:", error);
+    res.status(400).json({
+      success: false,
+      message: "Borrowing failed",
+      error: error?.errors || error?.message || error,
+    });
   }
 });
-
 
 controller.use((req, _res, next) => {
   console.log("Incoming route:", req.originalUrl);
