@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 // Or from '@reduxjs/toolkit/query/react'
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { bookApi } from '../services/books'
-import { booksSlice } from '../features/bookUISlice'
+import { bookFormSlice } from '../features/bookUISlice'
 
 
 
@@ -10,7 +10,7 @@ export const store = configureStore({
   reducer: {
     // Add the generated reducer as a specific top-level slice
     [bookApi.reducerPath]: bookApi.reducer,
-    bookUi: booksSlice.reducer,
+    bookUi: bookFormSlice.reducer,
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.

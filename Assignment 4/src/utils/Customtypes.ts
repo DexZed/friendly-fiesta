@@ -1,5 +1,5 @@
 export interface Book {
-  _id: string;
+  _id?: string;
   title: string;
   author: string;
   genre:
@@ -13,9 +13,9 @@ export interface Book {
   description?: string;
   copies: number;
   available?: boolean;
-  updateAvailability: () => void;
+  updateAvailability?: () => void;
 }
-
+export type BookForm = Omit<Book, "updateAvailability">;
 export interface Borrow {
   book: string;
   quantity: number;

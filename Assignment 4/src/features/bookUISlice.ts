@@ -1,25 +1,45 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { Book } from "../utils/Customtypes";
+import type { Book, BookForm } from "../utils/Customtypes";
 
-interface BooksState {
-  books: Book[];
+interface BookFormState {
+  form: BookForm;
 }
 
-const initialState: BooksState = {
-  books: [],
+const initialState: BookFormState = {
+  form: {
+    title: "",
+    author: "",
+    genre: "FICTION",
+    isbn: "",
+    description: "",
+    copies: 0,
+    available: true,
+  },
 };
 
-export const booksSlice = createSlice({
-  name: "booksUI",
+export const bookFormSlice = createSlice({
+  name: "bookForm",
   initialState,
   reducers: {
-    setBooks: (state, action: PayloadAction<Book[]>) => {
-      state.books = action.payload;
+    // For updating individual fields
+    updateBookForm: <K extends keyof BookForm>(
+      state: BookFormState,
+      action: PayloadAction<{ field: K; value:BookForm[K] }>
+    ) => {
+      state.form[action.payload.field] = action.payload.value;
     },
+    // Pre-filling form when editing a book
+    prefillBookForm: (state, action: PayloadAction<Book>) => {
+      const { updateAvailability, ...rest } = action.payload;
+      state.form = { ...rest };
+    },
+     // For resetting form back to empty (useful after submission)
+     resetBookForm: (state) =>{
+      state.form = initialState.form;
+     }
   },
 });
 
-export const { setBooks } = booksSlice.actions;
-
-export default booksSlice.reducer;
+export const { updateBookForm, prefillBookForm, resetBookForm } = bookFormSlice.actions;
+export default bookFormSlice.reducer;

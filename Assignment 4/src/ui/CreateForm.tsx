@@ -1,6 +1,26 @@
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { updateBookForm } from "../features/bookUISlice";
+import type { BookForm } from "../utils/Customtypes";
+
 type Props = {};
 
 function CreateForm({}: Props) {
+    const selector = useAppSelector(state=> state.bookUi.form);
+    const dispatch = useAppDispatch();
+
+    function handleInputChange(event: React.ChangeEvent<HTMLInputElement>){
+      const { name, type, value, checked } = event.target;
+      dispatch(updateBookForm({
+        field: name as keyof BookForm,
+        value: type === "number" ? Number(value) : type === "checkbox" ? checked : value
+      }))
+    }
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>){
+      event.preventDefault();
+      const formData = selector;
+      console.log(formData);
+    }
+
   return (
     <>
       <div className="hero bg-base-200 min-h-screen">
@@ -15,11 +35,11 @@ function CreateForm({}: Props) {
               — Thomas Hobbes, <cite className="italic">Leviathan</cite>
             </figcaption>
           </div>
-          <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+          <form onSubmit={handleSubmit} className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
             <div className="card-body">
               <fieldset className="fieldset">
                 <label className="label">Title</label>
-                <input
+                <input  onChange={handleInputChange}
                   name="title"
                   type="text"
                   className="input"
@@ -27,7 +47,7 @@ function CreateForm({}: Props) {
                 />
 
                 <label className="label">Author</label>
-                <input
+                <input  onChange={handleInputChange}
                   name="author"
                   type="text"
                   className="input"
@@ -35,7 +55,7 @@ function CreateForm({}: Props) {
                 />
 
                 <label className="label">Genre</label>
-                <input
+                <input  onChange={handleInputChange}
                   name="genre"
                   type="text"
                   className="input"
@@ -43,7 +63,7 @@ function CreateForm({}: Props) {
                 />
 
                 <label className="label">ISBN</label>
-                <input
+                <input  onChange={handleInputChange}
                   name="isbn"
                   type="text"
                   className="input"
@@ -51,7 +71,7 @@ function CreateForm({}: Props) {
                 />
 
                 <label className="label">Description</label>
-                <input
+                <input  onChange={handleInputChange}
                   name="description"
                   type="text"
                   className="input"
@@ -59,23 +79,23 @@ function CreateForm({}: Props) {
                 />
 
                 <label className="label">Copies</label>
-                <input
+                <input  onChange={handleInputChange}
                   name="copies"
                   type="number"
                   className="input"
                   placeholder="10"
                 />
                 <label className="label">Available</label>
-                <input
+                <input  onChange={handleInputChange}
                   name="available"
                   type="checkbox"
                   defaultChecked
                   className="checkbox checkbox-xl"
                 />
-                <button className="btn btn-neutral mt-4">Create</button>
+                <button className="btn btn-neutral mt-4" type="submit">Create</button>
               </fieldset>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </>
