@@ -18,7 +18,10 @@ export const bookApi = createApi({
       query: () => "books",
       providesTags: ["Books"],
     }),
-
+    getSingleBook: builder.query<Book, string>({
+      query: (id) => `books/${id}`,
+      providesTags: ["Books"],
+    }),
     createBook: builder.mutation<ApiBooksResponse, Partial<Book>>({
       query: (book) => {
         return {
@@ -111,6 +114,7 @@ export const bookApi = createApi({
 // auto-generated based on the defined endpoints
 export const {
   useGetBooksQuery,
+  useGetSingleBookQuery,
   useCreateBookMutation,
   useUpdateBookMutation,
   useDeleteBookMutation,

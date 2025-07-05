@@ -7,6 +7,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import { store } from "./app/store.ts";
 import ListView from "./ui/listView.tsx";
 import CreateForm from "./ui/CreateForm.tsx";
+import EditBook from "./ui/EditBook.tsx";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path:"/create-book",
         element:<><CreateForm/></>
+      },
+      {
+        path:"/edit-book/:id",
+        element:<><EditBook></EditBook></>
       },
     ],
   },

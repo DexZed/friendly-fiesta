@@ -9,8 +9,8 @@ function ListView({}: Props) {
   const { data, error, isLoading } = useGetBooksQuery(undefined);
   const [deleteBook] = useDeleteBookMutation();
   const books = data?.data || [];
-  console.log(books);
- async function actionDelete(id: string) {
+  
+ async function actionDelete(id: any) {
     try {
       await deleteBook(id).unwrap();
       //TODO: sweet alert toast confirmation
@@ -66,10 +66,8 @@ function ListView({}: Props) {
                         )}
                       </td>
                       <td className="flex gap-2">
-                        <ActionButtons
-                          name="Edit"
-                          color="btn-primary"
-                        />
+                        <Link className="btn btn-primary btn-outline rounded-full" to={"/edit-book/" + book._id}>Edit</Link>
+                          
                         <ActionButtons
                           name="Borrow"
                           color="btn-success"

@@ -1,17 +1,30 @@
-
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { updateBookForm } from "../features/bookUISlice";
-import { useCreateBookMutation } from "../services/books";
+import React, { useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "../app/hooks";
+import { prefillBookForm, updateBookForm } from "../features/bookUISlice";
+import {
+  useGetSingleBookQuery,
+  useUpdateBookMutation,
+} from "../services/books";
 import type { BookForm } from "../utils/Customtypes";
 import Error from "./Error";
+import { useParams } from "react-router";
 
-type Props = {
-};
+type Props = {};
 
-function CreateForm({}: Props) {
+export default function EditBook({}: Props) {
   const selector = useAppSelector((state) => state.bookUi.form);
+  const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const [createBook, { error }] = useCreateBookMutation();
+  const [updateBook, { error }] = useUpdateBookMutation();
+  const { data: book, isSuccess } = useGetSingleBookQuery(id!, {
+    skip: !id,
+  });
+
+  useEffect(() => {
+    if (isSuccess && book) {
+      dispatch(prefillBookForm(book));
+    }
+  }, [isSuccess, dispatch, book]);
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, type, value, checked } = event.target;
     dispatch(
@@ -29,16 +42,17 @@ function CreateForm({}: Props) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
-      const result = await createBook(selector).unwrap();
+      const result = await updateBook(selector).unwrap();
       console.log("Created successfully:", result);
     } catch (err) {
       console.error("Error occurred in creation:", err);
     }
   }
-
+  const isFormReady = Object.keys(selector).length > 0;
+  console.log(isFormReady)
   return (
     <>
-      {error ? (
+      {error && !isFormReady ? (
         <>
           <Error></Error>
         </>
@@ -47,13 +61,12 @@ function CreateForm({}: Props) {
           <div className="hero bg-base-200 min-h-screen">
             <div className="hero-content flex-col lg:flex-row-reverse">
               <div className="text-center lg:text-left">
-                <h1 className="text-5xl font-bold m-5">Add Book</h1>
+                <h1 className="text-5xl font-bold m-5">Edit Book</h1>
                 <blockquote className="text-lg italic text-gray-500">
-                  The First Cause of Absurd Conclusions I Ascribe to the Want of
-                  Method
+                  Abandon all hope ye who enter here
                 </blockquote>
                 <figcaption className="mt-3 text-right text-sm text-gray-500">
-                  — Thomas Hobbes, <cite className="italic">Leviathan</cite>
+                  — Dante Alighier, <cite className="italic">Inferno</cite>
                 </figcaption>
               </div>
               <form
@@ -64,6 +77,7 @@ function CreateForm({}: Props) {
                   <fieldset className="fieldset">
                     <label className="label">Title</label>
                     <input
+                      value={selector.title || ""}
                       onChange={handleInputChange}
                       name="title"
                       type="text"
@@ -73,6 +87,7 @@ function CreateForm({}: Props) {
 
                     <label className="label">Author</label>
                     <input
+                      value={selector.author || ""}
                       onChange={handleInputChange}
                       name="author"
                       type="text"
@@ -82,6 +97,7 @@ function CreateForm({}: Props) {
 
                     <label className="label">Genre</label>
                     <input
+                      value={selector.genre || ""}
                       onChange={handleInputChange}
                       name="genre"
                       type="text"
@@ -91,6 +107,7 @@ function CreateForm({}: Props) {
 
                     <label className="label">ISBN</label>
                     <input
+                      value={selector.isbn || ""}
                       onChange={handleInputChange}
                       name="isbn"
                       type="text"
@@ -100,6 +117,7 @@ function CreateForm({}: Props) {
 
                     <label className="label">Description</label>
                     <input
+                      value={selector.description ?? ""}
                       onChange={handleInputChange}
                       name="description"
                       type="text"
@@ -109,6 +127,7 @@ function CreateForm({}: Props) {
 
                     <label className="label">Copies</label>
                     <input
+                      value={selector.copies || ""}
                       onChange={handleInputChange}
                       name="copies"
                       type="number"
@@ -120,7 +139,7 @@ function CreateForm({}: Props) {
                       onChange={handleInputChange}
                       name="available"
                       type="checkbox"
-                      defaultChecked
+                      checked={selector.available || false}
                       className="checkbox checkbox-xl"
                     />
                     <button className="btn btn-neutral mt-4" type="submit">
@@ -136,4 +155,3 @@ function CreateForm({}: Props) {
     </>
   );
 }
-export default CreateForm;
