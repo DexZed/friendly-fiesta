@@ -7,11 +7,11 @@ import type {
   Borrow,
   BorrowResponse,
 } from "../utils/Customtypes";
-// Base URL : 
+// Base URL : https://friendly-fiesta-qsms.onrender.com, http://localhost:3000/api
 // Define a service using a base URL and expected endpoints
 export const bookApi = createApi({
   reducerPath: "bookApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/api" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "https://friendly-fiesta-qsms.onrender.com/api" }),
   tagTypes: ["Books", "Borrow"],
   endpoints: (builder) => ({
     getBooks: builder.query<ApiBooksResponse, undefined>({
