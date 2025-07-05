@@ -1,4 +1,5 @@
 
+import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { updateBookForm } from "../features/bookUISlice";
 import { useCreateBookMutation } from "../services/books";
@@ -12,6 +13,7 @@ function CreateForm({}: Props) {
   const selector = useAppSelector((state) => state.bookUi.form);
   const dispatch = useAppDispatch();
   const [createBook, { error }] = useCreateBookMutation();
+  const navigate = useNavigate();
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, type, value, checked } = event.target;
     dispatch(
@@ -31,6 +33,7 @@ function CreateForm({}: Props) {
     try {
       const result = await createBook(selector).unwrap();
       console.log("Created successfully:", result);
+      navigate("/");
     } catch (err) {
       console.error("Error occurred in creation:", err);
     }

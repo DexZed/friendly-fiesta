@@ -21,7 +21,11 @@ export interface Borrow {
   quantity: number;
   dueDate: Date;
 }
-
+export interface ApiSingleBookResponse {
+  success: boolean;
+  message: string;
+  data: Book;
+}
 // Define the full API response type
 export interface ApiBooksResponse {
   success: boolean;

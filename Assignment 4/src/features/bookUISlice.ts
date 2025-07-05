@@ -33,6 +33,7 @@ export const bookFormSlice = createSlice({
     prefillBookForm: (state, action: PayloadAction<Book>) => {
       const { updateAvailability, ...rest } = action.payload;
       state.form = { ...rest };
+      
     },
      // For resetting form back to empty (useful after submission)
      resetBookForm: (state) =>{

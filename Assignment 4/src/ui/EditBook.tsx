@@ -5,7 +5,7 @@ import {
   useGetSingleBookQuery,
   useUpdateBookMutation,
 } from "../services/books";
-import type { BookForm } from "../utils/Customtypes";
+import type { ApiSingleBookResponse, BookForm } from "../utils/Customtypes";
 import Error from "./Error";
 import { useParams } from "react-router";
 
@@ -16,28 +16,38 @@ export default function EditBook({}: Props) {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
   const [updateBook, { error }] = useUpdateBookMutation();
-  const { data: book, isSuccess } = useGetSingleBookQuery(id!, {
+  const { data: response } = useGetSingleBookQuery(id!, {
     skip: !id,
-  });
+  }) as unknown as {
+    data: ApiSingleBookResponse;
+  };
 
   useEffect(() => {
-    if (isSuccess && book) {
-      dispatch(prefillBookForm(book));
+    if (response?.data) {
+      dispatch(prefillBookForm(response.data));
     }
-  }, [isSuccess, dispatch, book]);
-  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const { name, type, value, checked } = event.target;
-    dispatch(
-      updateBookForm({
-        field: name as keyof BookForm,
-        value:
-          type === "number"
-            ? Number(value)
-            : type === "checkbox"
-            ? checked
-            : value,
-      })
-    );
+  }, [dispatch, response]);
+
+  function handleInputChange( event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+     const { name, type, value } = event.target;
+
+  let parsedValue: string | number | boolean = value;
+
+  if (type === "checkbox" && event.target instanceof HTMLInputElement) {
+    parsedValue = event.target.checked;
+  } else if (type === "number") {
+    parsedValue = Number(value);
+  } else if (name === "genre") {
+    const upper = value.toUpperCase().replace(/\s/g, "_");
+    parsedValue = upper;
+  }
+
+  dispatch(
+    updateBookForm({
+      field: name as keyof BookForm,
+      value: parsedValue,
+    })
+  );
   }
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -48,11 +58,10 @@ export default function EditBook({}: Props) {
       console.error("Error occurred in creation:", err);
     }
   }
-  const isFormReady = Object.keys(selector).length > 0;
-  console.log(isFormReady)
+
   return (
     <>
-      {error && !isFormReady ? (
+      {error ? (
         <>
           <Error></Error>
         </>
@@ -96,15 +105,20 @@ export default function EditBook({}: Props) {
                     />
 
                     <label className="label">Genre</label>
-                    <input
-                      value={selector.genre || ""}
-                      onChange={handleInputChange}
+                    
+                    <select 
+                    className="select"
                       name="genre"
-                      type="text"
-                      className="input"
-                      placeholder="Philosophy"
-                    />
-
+                      value={selector.genre}
+                      onChange={handleInputChange}
+                    >
+                      <option value="FICTION">Fiction</option>
+                      <option value="NON_FICTION">Non-fiction</option>
+                      <option value="SCIENCE">Science</option>
+                      <option value="HISTORY">History</option>
+                      <option value="BIOGRAPHY">Biography</option>
+                      <option value="FANTASY">Fantasy</option>
+                    </select>
                     <label className="label">ISBN</label>
                     <input
                       value={selector.isbn || ""}
@@ -143,7 +157,7 @@ export default function EditBook({}: Props) {
                       className="checkbox checkbox-xl"
                     />
                     <button className="btn btn-neutral mt-4" type="submit">
-                      Create
+                      Edit
                     </button>
                   </fieldset>
                 </div>

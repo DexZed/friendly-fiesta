@@ -139,7 +139,7 @@ controller.put("/books/:bookId", async (req: Request, res: Response) => {
       data: book,
     });
   } catch (error) {
-    
+    console.log(error);
     res
       .status(400)
       .json({ success: false, message: "Validation failed", error });
