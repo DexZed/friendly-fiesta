@@ -3,7 +3,7 @@ export default () => {
     return {
         port : parseInt(process.env.PORT as string,10) || (isDev? 3000:80),
         database : {
-            URL : process.env.MONGO_DB_URL
+            URL : process.env.MONGO_DB_URL 
         }
     }
 }
