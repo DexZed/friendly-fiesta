@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build:css": "npx @tailwindcss/cli -i ./public/input.css -o ./public/output.css",
+    "build:css": "postcss ./public/input.css -o ./public/output.css",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
