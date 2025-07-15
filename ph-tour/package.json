@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build:css": "postcss ./public/input.css -o ./public/output.css",
+    
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -27,13 +27,8 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/serve-static": "^5.0.3",
-    "@tailwindcss/postcss": "^4.1.11",
-    "daisyui": "^5.0.46",
-    "postcss": "^8.5.6",
-    "postcss-cli": "^11.0.1",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1",
-    "tailwindcss": "^4.1.11"
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
