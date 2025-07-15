@@ -6,7 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './config/configuration';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from 'path';
-import { Connection, Mongoose } from 'mongoose';
+import { Connection } from 'mongoose';
 import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({

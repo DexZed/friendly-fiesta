@@ -6,7 +6,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  @Redirect("http://localhost:3000/public",301)
+  @Redirect('http://localhost:3000/public', 301)
   getHello(): string {
     return this.appService.getHello();
   }
