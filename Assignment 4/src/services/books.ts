@@ -11,7 +11,7 @@ import type {
 // Define a service using a base URL and expected endpoints
 export const bookApi = createApi({
   reducerPath: "bookApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "https://friendly-fiesta-qsms.onrender.com/api" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "https://friendly-fiesta-qsms.onrender.com" }),
   tagTypes: ["Books", "Borrow"],
   endpoints: (builder) => ({
     getBooks: builder.query<ApiBooksResponse, undefined>({
@@ -101,7 +101,7 @@ export const bookApi = createApi({
           body: borrow,
         };
       },
-      invalidatesTags: ["Borrow"],
+      invalidatesTags: ["Books"],
     }),
     getBorrowSummary: builder.query<ApiBorrowSummaryResponse, undefined>({
       query: () => "borrow",
@@ -118,4 +118,6 @@ export const {
   useCreateBookMutation,
   useUpdateBookMutation,
   useDeleteBookMutation,
+  useCreateBorrowMutation,
+  useGetBorrowSummaryQuery,
 } = bookApi;

@@ -8,6 +8,7 @@ import { store } from "./app/store.ts";
 import ListView from "./ui/listView.tsx";
 import CreateForm from "./ui/CreateForm.tsx";
 import EditBook from "./ui/EditBook.tsx";
+import BorrowBook from "./ui/BorrowBook.tsx";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path:"/edit-book/:id",
         element:<><EditBook></EditBook></>
+      },
+      {
+        path:"/borrow/:id",
+        element:<><BorrowBook></BorrowBook></>
       },
     ],
   },

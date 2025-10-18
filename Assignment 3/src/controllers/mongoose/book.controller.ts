@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { BooksModel, BorrowModel } from "../../mongodb/schema/book.schema";
+
 console.log("Borrow controller file was loaded at:", new Date().toLocaleTimeString());
 const controller = Router();
 
@@ -165,6 +166,8 @@ controller.delete("/books/:bookId", async (req: Request, res: Response) => {
 controller.post("/borrow", async (req: Request, res: Response) => {
   try {
     const { book: bookId, quantity, dueDate } = req.body;
+    console.log("Request Body:", req.body);
+    
     const book = await BooksModel.findById(bookId);
     if (!book) throw new Error("Book not found");
     if (book.copies < quantity) throw new Error("Not enough copies available");

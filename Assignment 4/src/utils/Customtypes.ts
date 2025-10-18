@@ -19,7 +19,7 @@ export type BookForm = Omit<Book, "updateAvailability">;
 export interface Borrow {
   book: string;
   quantity: number;
-  dueDate: Date;
+  dueDate: string;
 }
 export interface ApiSingleBookResponse {
   success: boolean;

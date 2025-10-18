@@ -5,6 +5,7 @@ import { updateBookForm } from "../features/bookUISlice";
 import { useCreateBookMutation } from "../services/books";
 import type { BookForm } from "../utils/Customtypes";
 import Error from "./Error";
+import { showErrorAlert, showSuccessAlert } from "../utils/utilityFunctions";
 
 type Props = {
 };
@@ -31,10 +32,11 @@ function CreateForm({}: Props) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
-      const result = await createBook(selector).unwrap();
-      console.log("Created successfully:", result);
+     await createBook(selector).unwrap();
+     showSuccessAlert("Success", "Book created successfully!");
       navigate("/");
     } catch (err) {
+      showErrorAlert("Error", "Failed to create the book.");
       console.error("Error occurred in creation:", err);
     }
   }
